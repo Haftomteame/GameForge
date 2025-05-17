@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Modifier {{ game.title }} - GameForge{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center" style="min-height: 100vh; background: #1a1b26;">
+    <div class="card p-4 shadow-lg" style="background: #24283b; border-radius: 20px; min-width: 420px; max-width: 480px; width: 100%;">
+        <div class="text-center mb-4">
+            <span style="font-size:2rem;">🛠️</span>
+            <h2 class="fw-bold" style="color: #7aa2f7;">Modifier {{ game.title }}</h2>
+        </div>
+        {% if messages %}
+        <div class="messages mb-3">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert" style="background: #414868; color: #fff; border: none;">
+                <div class="d-flex align-items-center">
+                    <div class="me-3">
+                        {% if message.tags == 'error' %}
+                            <span style="color: #f7768e;">⚠️</span>
+                        {% elif message.tags == 'success' %}
+                            <span style="color: #9ece6a;">✅</span>
+                        {% elif message.tags == 'warning' %}
+                            <span style="color: #e0af68;">⚠️</span>
+                        {% else %}
+                            <span style="color: #7aa2f7;">ℹ️</span>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <strong style="color: {% if message.tags == 'error' %}#f7768e{% elif message.tags == 'success' %}#9ece6a{% elif message.tags == 'warning' %}#e0af68{% else %}#7aa2f7{% endif %};">
+                            {% if message.tags == 'error' %}
+                                Erreur :
+                            {% elif message.tags == 'success' %}
+                                Succès :
+                            {% elif message.tags == 'warning' %}
+                                Attention :
+                            {% else %}
+                                Information :
+                            {% endif %}
+                        </strong>
+                        <div class="mt-1">{{ message }}</div>
+                        {% if message.extra_tags %}
+                            <div class="mt-2" style="font-size: 0.9em; color: #a9b1d6;">
+                                <small>Détails techniques : {{ message.extra_tags }}</small>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        <form method="POST" enctype="multipart/form-data" id="editGameForm">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="id_title" class="form-label fw-bold" style="color:#7aa2f7;">Title:</label>
+                {{ form.title }}
+            </div>
+            <div class="mb-3">
+                <label for="id_genre" class="form-label fw-bold" style="color:#7aa2f7;">Genre:</label>
+                {{ form.genre }}
+            </div>
+            <div class="mb-3">
+                <label for="id_ambiance" class="form-label fw-bold" style="color:#7aa2f7;">Theme:</label>
+                {{ form.ambiance }}
+            </div>
+            <div class="mb-3">
+                <label for="id_references" class="form-label fw-bold" style="color:#7aa2f7;">Inspirations:</label>
+                {{ form.references }}
+            </div>
+            <div class="d-grid gap-2 mt-3">
+                <button type="submit" class="btn fw-bold" style="background:#7aa2f7; color:#1a1b26; border:none; font-size:1.1rem;">Enregistrer les modifications</button>
+                <a href="{% url 'games:game_detail' game.id %}" class="btn btn-outline-secondary">Annuler</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %} 

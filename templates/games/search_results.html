@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}Résultats de recherche - GameForge{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center" style="min-height: 100vh; background: #1a1b26; padding-top: 60px;">
+    <div class="card p-4" style="background: #24283b; border-radius: 20px; max-width: 900px; width: 100%; color: #fff; margin: auto; box-shadow: 0 4px 24px 0 rgba(0,0,0,0.25);">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <a href="{% url 'core:home' %}" class="btn" style="background:#414868; color:#fff; border:none;">
+                <i class="fas fa-arrow-left me-2"></i>Retour
+            </a>
+            <h2 class="mb-0" style="color: #fff;">
+                {% if query %}
+                    Résultats pour "{{ query }}"
+                {% else %}
+                    Tous les jeux
+                {% endif %}
+            </h2>
+            <div style="width: 100px;"></div> <!-- Espaceur pour centrer le titre -->
+        </div>
+
+        <form method="get" action="{% url 'games:search_games' %}" class="mb-4 d-flex" style="gap: 1rem;">
+            <input type="text" name="q" class="form-control" placeholder="Rechercher par nom, genre, ambiance..." value="{{ query }}" style="background:#414868; color:#fff; border:none;">
+            <button type="submit" class="btn" style="background:#7aa2f7; color:#1a1b26; border:none;"><i class="fas fa-search"></i> Rechercher</button>
+        </form>
+
+        {% if games %}
+            <div style="display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center;">
+                {% for game in games %}
+                    <div class="card p-3" style="min-width:220px; max-width:260px; flex:1; background:#414868; color:#fff; border-radius:20px;">
+                        <h4>{{ game.title }}</h4>
+                        <div style="color:var(--text-muted); font-size:0.95em;">
+                            <span>Genre: {{ game.get_genre_display }}</span><br>
+                            <span>Ambiance: {{ game.get_ambiance_display }}</span>
+                        </div>
+                        <p style="font-size:0.98em;">{{ game.description|truncatewords:30 }}</p>
+                        <a href="{% url 'games:game_detail' game.id %}" class="btn w-100" style="background:#7aa2f7; color:#1a1b26; border:none;"><i class="fas fa-eye me-1"></i>Voir détails</a>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="text-center" style="color:var(--text-muted);">
+                {% if query %}
+                    Aucun résultat trouvé pour "{{ query }}"
+                {% else %}
+                    Aucun jeu public pour le moment
+                {% endif %}
+            </p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,200 @@
+/* Palette GameForge */
+:root {
+  --bg-main: #1a1b26;
+  --card-bg: #24283b;
+  --input-bg: #414868;
+  --primary: #7aa2f7;
+  --primary-hover: #5b7cc7;
+  --success: #9ece6a;
+  --danger: #f7768e;
+  --warning: #e0af68;
+  --text-main: #e6e6f0;
+  --text-muted: #a9b1d6;
+  --border-radius: 20px;
+  --shadow: 0 4px 24px 0 rgba(0,0,0,0.25);
+}
+
+[data-theme='light'] {
+  --bg-main: #f7f7fa;
+  --card-bg: #fff;
+  --input-bg: #e6e9f0;
+  --primary: #3b5bdb;
+  --primary-hover: #274690;
+  --success: #51cf66;
+  --danger: #fa5252;
+  --warning: #fab005;
+  --text-main: #222;
+  --text-muted: #6c757d;
+  --border-radius: 20px;
+  --shadow: 0 4px 24px 0 rgba(0,0,0,0.08);
+}
+
+body {
+  background: var(--bg-main) !important;
+  color: var(--text-main);
+  font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+}
+
+.card, .card-body, .card-header {
+  background: var(--card-bg) !important;
+  color: var(--text-main);
+  border-radius: var(--border-radius) !important;
+  box-shadow: var(--shadow);
+  border: none;
+}
+
+input, textarea, select, .form-control, .form-select {
+  background: var(--input-bg) !important;
+  color: var(--text-main) !important;
+  border: none !important;
+  border-radius: 12px !important;
+}
+
+input:focus, textarea:focus, select:focus {
+  outline: 2px solid var(--primary);
+  box-shadow: 0 0 0 2px var(--primary);
+}
+
+.btn-primary, .btn-main, button[type="submit"] {
+  background: var(--primary) !important;
+  color: var(--bg-main) !important;
+  border: none !important;
+  border-radius: 12px !important;
+  font-weight: bold;
+  transition: background 0.2s;
+}
+
+.btn-primary:hover, .btn-main:hover, button[type="submit"]:hover {
+  background: var(--primary-hover) !important;
+}
+
+a, .link {
+  color: var(--primary);
+  text-decoration: underline;
+}
+
+a:hover, .link:hover {
+  color: var(--success);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--primary);
+  font-weight: bold;
+}
+
+.alert-success {
+  background: #283a2f !important;
+  color: var(--success) !important;
+  border: none;
+}
+
+.alert-danger, .alert-error {
+  background: #3a282c !important;
+  color: var(--danger) !important;
+  border: none;
+}
+
+.alert-warning {
+  background: #3a3328 !important;
+  color: var(--warning) !important;
+  border: none;
+}
+
+.navbar, .navbar-nav, .navbar-brand {
+  background: rgba(10, 10, 20, 0.98) !important;
+  color: #fff !important;
+  box-shadow: 0 2px 12px 0 rgba(0,0,0,0.18);
+  border-bottom: none;
+  backdrop-filter: blur(10px);
+}
+[data-theme='light'] .navbar, [data-theme='light'] .navbar-nav, [data-theme='light'] .navbar-brand {
+  background: linear-gradient(90deg, #e9ecfa 0%, #f7f7fa 100%) !important;
+  color: #274690 !important;
+  box-shadow: 0 2px 12px 0 rgba(59,91,219,0.08);
+  border-bottom: none;
+  backdrop-filter: blur(10px);
+}
+.navbar .nav-link, .navbar .navbar-brand {
+  color: #fff !important;
+  font-weight: 700;
+  transition: color 0.2s;
+  border-radius: 8px;
+  padding: 6px 16px;
+  letter-spacing: 0.5px;
+}
+[data-theme='light'] .navbar .nav-link, [data-theme='light'] .navbar .navbar-brand {
+  color: #274690 !important;
+}
+.navbar .nav-link.active, .navbar .nav-link:focus, .navbar .nav-link:hover {
+  color: #ffd700 !important;
+  background: rgba(122,162,247,0.18);
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  background: var(--card-bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 8px;
+}
+
+/* Pour les messages, badges, etc. */
+.badge-primary {
+  background: var(--primary) !important;
+  color: var(--bg-main) !important;
+}
+.badge-success {
+  background: var(--success) !important;
+  color: var(--bg-main) !important;
+}
+.badge-danger {
+  background: var(--danger) !important;
+  color: var(--bg-main) !important;
+}
+.badge-warning {
+  background: var(--warning) !important;
+  color: var(--bg-main) !important;
+}
+
+/* Espacement général */
+.container, .card, .form-control, .form-select {
+  margin-bottom: 1rem;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .card {
+    min-width: unset !important;
+    max-width: 98vw !important;
+    padding: 1rem !important;
+  }
+}
+
+/* Déconnexion dans la navbar : style lien comme Profil */
+.navbar .btn-main {
+  background: transparent !important;
+  color: var(--primary) !important;
+  border-radius: 12px !important;
+  font-weight: bold;
+  margin-left: 8px;
+  padding: 6px 18px;
+  border: none !important;
+  box-shadow: none !important;
+  transition: color 0.2s, background 0.2s;
+}
+.navbar .btn-main:hover {
+  background: transparent !important;
+  color: var(--primary-hover) !important;
+}
+
+/* Supprimer les backgrounds foncés sur les groupes de liens de la navbar */
+.navbar .container, .navbar .navbar-nav, .navbar .navbar-brand, .navbar .nav-item, .navbar .nav-link, .navbar form {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.message-error { color: #f7768e; }
+.message-success { color: #9ece6a; }
+.message-warning { color: #e0af68; }
+.message-info, .message-default { color: #7aa2f7; } 

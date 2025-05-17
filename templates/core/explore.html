@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}Explorer les concepts - GameForge{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center" style="min-height: 100vh; background: #1a1b26;">
+    <div class="card p-4" style="background: #24283b; border-radius: 20px; max-width: 900px; width: 100%; color: #fff;">
+        <h2 class="mb-4 text-center" style="color: #fff;">Explorer les concepts créés</h2>
+        <form method="get" action="{% url 'games:search_games' %}" class="mb-4 d-flex" style="gap: 1rem;">
+            <input type="text" name="q" class="form-control" placeholder="Rechercher par nom, genre, ambiance..." value="{{ request.GET.q|default:'' }}">
+            <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i> Rechercher</button>
+        </form>
+        {% if games %}
+            <div style="display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center;">
+                {% for game in games %}
+                    <div class="card p-3" style="min-width:220px; max-width:260px; flex:1; background:#414868; color:#fff; border-radius:20px;">
+                        <h4>{{ game.title }}</h4>
+                        <div style="color:var(--text-muted); font-size:0.95em;">
+                            <span>Genre: {{ game.get_genre_display }}</span><br>
+                            <span>Ambiance: {{ game.get_ambiance_display }}</span>
+                        </div>
+                        <p style="font-size:0.98em;">{{ game.description|truncatewords:30 }}</p>
+                        <a href="{% url 'games:game_detail' game.id %}" class="btn-main btn w-100"><i class="fas fa-eye me-1"></i>Voir détails</a>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="text-center" style="color:var(--text-muted);">Aucun concept trouvé.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %} 

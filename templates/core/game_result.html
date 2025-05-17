@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ game.title }} - GameForge{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h2>{{ game.title }}</h2>
+                    <div>
+                        <span class="badge bg-primary">{{ game.get_genre_display }}</span>
+                        <span class="badge bg-secondary">{{ game.get_ambiance_display }}</span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    {% if game.concept_art %}
+                        <img src="{{ game.concept_art.url }}" class="img-fluid rounded mb-4" alt="Concept Art">
+                    {% endif %}
+                    
+                    <h4>Description</h4>
+                    <p>{{ game.description|linebreaks }}</p>
+
+                    <h4>Gameplay</h4>
+                    <p>{{ game.gameplay|linebreaks }}</p>
+
+                    <h4>Histoire</h4>
+                    <p>{{ game.story|linebreaks }}</p>
+
+                    <h4>Personnages</h4>
+                    <p>{{ game.characters|linebreaks }}</p>
+
+                    <h4>Environnement</h4>
+                    <p>{{ game.environment|linebreaks }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h4>Actions</h4>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a href="{% url 'core:generate_game' %}" class="btn btn-primary">Générer un nouveau jeu</a>
+                        <a href="{% url 'games:edit_game' game.id %}" class="btn btn-outline-primary">Modifier</a>
+                        <form method="POST" action="{% url 'games:toggle_public' game.id %}" class="d-grid">
+                            {% csrf_token %}
+                            <button type="submit" class="btn {% if game.is_public %}btn-success{% else %}btn-secondary{% endif %}">
+                                {% if game.is_public %}Rendre privé{% else %}Rendre public{% endif %}
+                            </button>
+                        </form>
+                        <form method="POST" action="{% url 'games:delete_game' game.id %}" class="d-grid" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce jeu ?');">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">Supprimer</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h4>Informations</h4>
+                </div>
+                <div class="card-body">
+                    <p><strong>Créé par:</strong> {{ game.user.username }}</p>
+                    <p><strong>Date de création:</strong> {{ game.created_at|date:"d/m/Y H:i" }}</p>
+                    <p><strong>Dernière modification:</strong> {{ game.updated_at|date:"d/m/Y H:i" }}</p>
+                    <p><strong>Statut:</strong> {% if game.is_public %}Public{% else %}Privé{% endif %}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

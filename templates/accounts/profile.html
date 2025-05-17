@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Profil - {{ user.username }} - GameForge{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center" style="min-height: 100vh; background: #1a1b26; padding-top: 60px;">
+    <div class="card p-4" style="background: #24283b; border-radius: 20px; max-width: 900px; width: 100%; color: #fff; margin: auto; box-shadow: 0 4px 24px 0 rgba(0,0,0,0.25);">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card" style="background:#414868; color:#fff; border-radius:20px;">
+                    <div class="card-body text-center">
+                        {% if user.profile.avatar %}
+                            <img src="{{ user.profile.avatar.url }}" alt="Avatar" class="rounded-circle img-fluid mb-3" style="max-width: 150px;">
+                        {% else %}
+                            <img src="https://via.placeholder.com/150" alt="Avatar par défaut" class="rounded-circle img-fluid mb-3">
+                        {% endif %}
+                        <h3>{{ user.username }}</h3>
+                        <p class="text-muted" style="color:var(--text-main) !important;">{{ user.email }}</p>
+                        {% if user.profile.bio %}
+                            <p style="color:var(--text-main);">{{ user.profile.bio }}</p>
+                        {% endif %}
+                        <a href="{% url 'accounts:edit_profile' %}" class="btn btn-primary">Modifier le profil</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="card mb-4" style="background:#414868; color:#fff; border-radius:20px;">
+                    <div class="card-body">
+                        <h4 class="mb-3" style="color:#ffd700;"><i class="fas fa-star"></i> Mes favoris</h4>
+                        {% if favorite_games %}
+                            <div class="row">
+                                {% for game in favorite_games %}
+                                    <div class="col-md-6 mb-4">
+                                        <div class="card" style="background:#24283b; color:#fff; border-radius:16px; border: 1px solid #ffd700;">
+                                            <div class="card-body">
+                                                <h5 style="color: #ffd700; font-weight: bold;">{{ game.title }}</h5>
+                                                <p class="mb-1" style="color: #fff;">Genre: {{ game.get_genre_display }}</p>
+                                                <p class="mb-2" style="color: #fff;">Ambiance: {{ game.get_ambiance_display }}</p>
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <a href="{% url 'games:game_detail' game.id %}" class="btn btn-sm btn-outline-warning" title="Voir détails"><i class="fas fa-eye"></i></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <p class="text-center" style="color:var(--text-main);">Aucun favori pour le moment.</p>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="card" style="background:#414868; color:#fff; border-radius:20px;">
+                    <div class="card-body">
+                        <h4 class="mb-3" style="color:#fff;">Mes jeux</h4>
+                        <form method="get" action="{% url 'accounts:profile' %}" class="mb-4">
+                            <div class="d-flex" style="gap: 1rem;">
+                                <input type="text" name="q" class="form-control" placeholder="Rechercher parmi mes jeux..." value="{{ request.GET.q|default:'' }}" style="background:#24283b; color:#fff; border:none;">
+                                <button type="submit" class="btn" style="background:#7aa2f7; color:#1a1b26; border:none;"><i class="fas fa-search"></i> Rechercher</button>
+                                {% if request.GET.q %}
+                                    <a href="{% url 'accounts:profile' %}" class="btn" style="background:#414868; color:#fff; border:none;">
+                                        <i class="fas fa-times"></i> Effacer
+                                    </a>
+                                {% endif %}
+                            </div>
+                        </form>
+                        {% if user_games %}
+                            <div class="row">
+                                {% for game in user_games %}
+                                    <div class="col-md-6 mb-4">
+                                        <div class="card" style="background:#24283b; color:#fff; border-radius:16px;">
+                                            <div class="card-body">
+                                                <h5 style="color: var(--text-main); font-weight: bold;">{{ game.title }}</h5>
+                                                <p class="mb-1" style="color: var(--text-main);">Genre: {{ game.get_genre_display }}</p>
+                                                <p class="mb-2" style="color: var(--text-main);">Ambiance: {{ game.get_ambiance_display }}</p>
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <a href="{% url 'games:game_detail' game.id %}" class="btn btn-sm btn-outline-primary" title="Voir détails"><i class="fas fa-eye"></i></a>
+                                                    <form method="POST" action="{% url 'games:delete_game' game.id %}" class="d-inline" onsubmit="return confirm('Supprimer ce jeu ?');">
+                                                        {% csrf_token %}
+                                                        <button type="submit" class="btn btn-sm btn-outline-danger" title="Supprimer">
+                                                            <i class="fas fa-trash-alt"></i>
+                                                        </button>
+                                                    </form>
+                                                    <form method="POST" action="{% url 'games:toggle_public' game.id %}" class="d-inline">
+                                                        {% csrf_token %}
+                                                        <button type="submit" class="btn btn-sm {% if game.is_public %}btn-success{% else %}btn-secondary{% endif %}">
+                                                            {% if game.is_public %}Public{% else %}Privé{% endif %}
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <p class="text-center" style="color:var(--text-main);">Vous n'avez pas encore créé de jeux.</p>
+                            <div class="text-center">
+                                <a href="{% url 'core:generate_game' %}" class="btn btn-primary">Créer un jeu</a>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

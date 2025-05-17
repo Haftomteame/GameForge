@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Générer un jeu - GameForge{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center" style="min-height: 100vh; background: #1a1b26;">
+    <div class="card p-4 shadow-lg" style="background: #24283b; border-radius: 20px; min-width: 420px; max-width: 480px; width: 100%;">
+        <div class="text-center mb-4">
+            <span style="font-size:2rem;">🎮</span>
+            <h2 class="fw-bold" style="color: #7aa2f7;">Créateur de Jeu Vidéo</h2>
+        </div>
+        {% if messages %}
+        <div class="messages mb-3">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert" style="background: #414868; color: #fff; border: none;">
+                <div class="d-flex align-items-center">
+                    <div class="me-3">
+                        {% if message.tags == 'error' %}
+                            <span style="color: #f7768e;">⚠️</span>
+                        {% elif message.tags == 'success' %}
+                            <span style="color: #9ece6a;">✅</span>
+                        {% elif message.tags == 'warning' %}
+                            <span style="color: #e0af68;">⚠️</span>
+                        {% else %}
+                            <span style="color: #7aa2f7;">ℹ️</span>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <strong class="message-{{ message.tags }}">
+                            {{ message }}
+                        </strong>
+                        {% if message.extra_tags %}
+                            <div class="mt-2" style="font-size: 0.9em; color: #a9b1d6;">
+                                <small>Détails techniques : {{ message.extra_tags }}</small>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        <form method="POST" id="gameForm">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="id_title" class="form-label fw-bold" style="color:#7aa2f7;">Title:</label>
+                <input type="text" name="title" maxlength="200" class="form-control" id="id_title" style="background:#414868; color:#fff; border:none;" value="{{ title|default:'' }}">
+            </div>
+            <div class="mb-3">
+                <label for="id_genre" class="form-label fw-bold" style="color:#7aa2f7;">Genre:</label>
+                {{ form.genre }}
+            </div>
+            <div class="mb-3">
+                <label for="id_ambiance" class="form-label fw-bold" style="color:#7aa2f7;">Theme:</label>
+                {{ form.ambiance }}
+            </div>
+            <div class="mb-3">
+                <label for="id_references" class="form-label fw-bold" style="color:#7aa2f7;">Inspirations:</label>
+                <textarea name="references" rows="3" class="form-control" id="id_references" style="background:#414868; color:#fff; border:none;">{{ references|default:'' }}</textarea>
+            </div>
+            <button type="submit" class="btn w-100 fw-bold" id="generateBtn" style="background:#7aa2f7; color:#1a1b26; border:none; font-size:1.1rem;">
+                <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true" id="loadingSpinner"></span>
+                Générer le concept
+            </button>
+        </form>
+        <div class="text-center mt-3">
+            <a href="{% url 'core:explore' %}" class="fw-bold" style="color:#7aa2f7; text-decoration:underline;">Voir tous les concepts créés</a>
+        </div>
+        {% if generated_content %}
+        <hr style="border-color:#7aa2f7;">
+        <div class="mt-4" style="background:#414868; border-radius:12px; padding:20px; color:#fff;">
+            <h4 class="fw-bold mb-3" style="color:#7aa2f7;">Concept généré</h4>
+            {% if generated_content.description %}
+                <h5>Description</h5>
+                <p>{{ generated_content.description|linebreaksbr }}</p>
+            {% endif %}
+            {% if generated_content.gameplay %}
+                <h5>Gameplay</h5>
+                <p>{{ generated_content.gameplay|linebreaksbr }}</p>
+            {% endif %}
+            {% if generated_content.story %}
+                <h5>Scénario</h5>
+                <p>{{ generated_content.story|linebreaksbr }}</p>
+            {% endif %}
+            {% if generated_content.characters %}
+                <h5>Personnages</h5>
+                <p>{{ generated_content.characters|linebreaksbr }}</p>
+            {% endif %}
+            {% if generated_content.environment %}
+                <h5>Univers</h5>
+                <p>{{ generated_content.environment|linebreaksbr }}</p>
+            {% endif %}
+            {% if generated_content.character_image %}
+                <h5>Visuel du personnage</h5>
+                <img src="{{ generated_content.character_image.url }}" alt="Concept Art Personnage" class="img-fluid rounded mb-3" style="max-height:220px;">
+            {% endif %}
+            {% if generated_content.environment_image %}
+                <h5>Visuel de l'environnement</h5>
+                <img src="{{ generated_content.environment_image.url }}" alt="Concept Art Environnement" class="img-fluid rounded mb-3" style="max-height:220px;">
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+document.getElementById('gameForm').addEventListener('submit', function(e) {
+    const generateBtn = document.getElementById('generateBtn');
+    const loadingSpinner = document.getElementById('loadingSpinner');
+    generateBtn.disabled = true;
+    loadingSpinner.classList.remove('d-none');
+    generateBtn.innerHTML = 'Génération en cours...';
+});
+</script>
+{% endblock %}
+{% endblock %} 

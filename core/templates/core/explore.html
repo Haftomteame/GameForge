@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Explorer les Jeux - GameForge{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="mb-4">Explorer les Jeux</h1>
+    
+    <div class="row">
+        {% if games %}
+            {% for game in games %}
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card h-100">
+                        {% if game.concept_art %}
+                            <img src="{{ game.concept_art.url }}" class="card-img-top" alt="Concept art de {{ game.title }}">
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">{{ game.title }}</h5>
+                            <p class="card-text">
+                                <small class="text-muted">
+                                    Genre: {{ game.get_genre_display }} | 
+                                    Ambiance: {{ game.get_ambiance_display }}
+                                </small>
+                            </p>
+                            <p class="card-text">{{ game.description|truncatewords:30 }}</p>
+                        </div>
+                        <div class="card-footer bg-transparent">
+                            <a href="{% url 'games:game_detail' game.id %}" class="btn btn-primary">Voir les détails</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="col-12">
+                <div class="alert alert-info">
+                    Aucun jeu public n'est disponible pour le moment.
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %} 
